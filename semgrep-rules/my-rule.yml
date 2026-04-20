@@ -1,0 +1,10 @@
+# semgrep-rules/my-rule.yml
+rules:
+  - id: insecure-eval-usage
+    patterns:
+      - pattern: eval($X)
+    message: "【資安警告】不要使用原生的 eval()，這會導致程式碼注入攻擊。請改用安全的 ast.literal_eval()。"
+    languages: [python]
+    severity: ERROR
+    # 👇 這就是免費修復的關鍵！我們把修復建議直接寫死在規則裡
+    fix: ast.literal_eval($X)
