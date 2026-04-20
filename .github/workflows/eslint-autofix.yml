@@ -20,11 +20,15 @@ jobs:
           npm init -y
           npm install eslint @microsoft/eslint-formatter-sarif --save-dev
 
+      - name: Debug - List Files
+        run: |
+          ls -R
+
       - name: Run ESLint and Export SARIF
         run: |
-          # 執行掃描並使用專用的 SARIF formatter 輸出
-          npx eslint test_vuln.js --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
-        continue-on-error: true # 確保即便有 error 也會跑下一步上傳
+          # 直接掃描當前目錄 (.)，不要指定特定檔案
+          npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true
 
       - name: Upload SARIF to GitHub
         uses: github/codeql-action/upload-sarif@v3
