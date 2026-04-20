@@ -26,7 +26,11 @@ jobs:
 
       - name: Run ESLint and Export SARIF
         run: |
-          # 直接掃描當前目錄 (.)，不要指定特定檔案
+          # 1. 確保安裝了必要的套件（新版 ESLint 需要這些）
+          npm install eslint @microsoft/eslint-formatter-sarif @eslint/js --save-dev
+          
+          # 2. 執行掃描 (使用 . 代表掃描全域)
+          # 注意：新版 ESLint 不需要 --format 的完整名稱，直接指定路徑或套件名
           npx eslint . --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
         continue-on-error: true
 
