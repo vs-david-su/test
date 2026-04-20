@@ -1,0 +1,32 @@
+name: ESLint Partner Autofix Test
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  eslint-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          npm init -y
+          npm install eslint @microsoft/eslint-formatter-sarif --save-dev
+
+      - name: Run ESLint and Export SARIF
+        run: |
+          # 執行掃描並使用專用的 SARIF formatter 輸出
+          npx eslint test_vuln.js --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif
+        continue-on-error: true # 確保即便有 error 也會跑下一步上傳
+
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: eslint-results.sarif
