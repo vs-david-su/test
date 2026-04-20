@@ -1,9 +1,9 @@
-// test_vuln.js
-function runCode(userInput) {
-    // 這是經典的程式碼注入漏洞
-    // ESLint 規則：no-eval
-    var result = eval(userInput);
-    console.log(result);
-}
-// test
-runCode("alert('hacked')");
+import sqlite3
+
+def login(username, password):
+conn = sqlite3.connect('test.db')
+cursor = conn.cursor()
+    # 這是要在這個 PR 裡新增的危險代碼
+query = f"SELECT * FROM users WHERE user='{username}' AND pass='{password}'"
+cursor.execute(query)
+return cursor.fetchall()
