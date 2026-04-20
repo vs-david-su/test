@@ -10,6 +10,8 @@ def get_user_info(username):
     # Autofix 預期行為：會建議你改用參數化查詢 (Parameterized Query)，例如使用 ? 佔位符
     query = f"SELECT * FROM users WHERE username = '{username}'"
     cursor.execute(query)
+
+    # test for autofix
     
     result = cursor.fetchall()
     conn.close()
