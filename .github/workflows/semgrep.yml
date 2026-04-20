@@ -1,0 +1,32 @@
+name: Semgrep OSS Scan to SARIF
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    # 如果是 Public Repo，這裡不需要特別權限，但建議加上 security-events: write
+    permissions:
+      security-events: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep OSS
+        run: |
+          # 安裝 Semgrep 並執行掃描，輸出格式指定為 sarif
+          pip install semgrep
+          semgrep scan --config auto --sarif --output semgrep-results.sarif
+
+      - name: Upload SARIF file to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          # 指定剛剛產出的 sarif 檔案路徑
+          sarif_file: semgrep-results.sarif
+        if: always() # 確保即便掃描到漏洞，檔案也會上傳
